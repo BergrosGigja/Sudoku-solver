@@ -16,11 +16,9 @@ def main():
     # Create a 2 dimensional array
     grid = []
     for row in range(9):
-        increase = 1
         grid.append([])
         for column in range(9):
-            grid[row].append(increase)
-            increase += 1
+            grid[row].append("")
      
     # initialize screen with logo and caption
     pygame.init()
@@ -48,10 +46,13 @@ def main():
                 column = pos[0] // (WIDTH + MARGIN)
                 row = pos[1] // (HEIGHT + MARGIN)
 
-                if grid[row][column] == 9:
-                    grid[row][column] = 1
+                if grid[row][column] == "":
+                    grid[row][column] = "1"
+                elif grid[row][column] == "9":
+                    grid[row][column] = ""
                 else:
-                    grid[row][column] += 1
+                    newNum = int(grid[row][column]) + 1
+                    grid[row][column] = str(newNum)
 
         screen.fill(WHITE)
 
@@ -85,10 +86,8 @@ def main():
             w = 1
             for column in range(9):
                 color = WHITE
-                if grid[row][column] == 1:
-                    color = GREEN
 
-                text = font.render(str(grid[row][column]), True, RED)
+                text = font.render(grid[row][column], True, RED)
                 text_rect = text.get_rect()
                 text_x = (w * WIDTH) - text_rect.width / 2
                 text_y = (h * HEIGHT) - text_rect.height / 2
