@@ -1,5 +1,19 @@
 import pygame
 
+def draw(grid, color, font, screen, WIDTH, HEIGHT):
+    h = 1
+    for row in range(9):
+        w = 1
+        for column in range(9):
+
+            text = font.render(grid[row][column], True, color)
+            text_rect = text.get_rect()
+            text_x = (w * WIDTH) - text_rect.width / 2
+            text_y = (h * HEIGHT) - text_rect.height / 2
+            screen.blit(text, [text_x, text_y])
+            w += 1
+        h += 1
+
 def vertical(screen, color):
     pygame.draw.lines(screen, color, False, [(0,0), (400,0)], 4)
     pygame.draw.lines(screen, color, False, [(0,44), (400,44)], 1) #First small line
@@ -69,7 +83,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if button.collidepoint(pos):
-                    print('button was pressed')
+                    print("solve")
                 else:
                     # Change number based on mouse click
                     column = pos[0] // (WIDTH + MARGIN)
@@ -89,19 +103,8 @@ def main():
         horizontal(screen, BLACK)
         vertical(screen, BLACK)
 
-        h = 1
-        for row in range(9):
-            w = 1
-            for column in range(9):
-                color = WHITE
-
-                text = font.render(grid[row][column], True, RED)
-                text_rect = text.get_rect()
-                text_x = (w * WIDTH) - text_rect.width / 2
-                text_y = (h * HEIGHT) - text_rect.height / 2
-                screen.blit(text, [text_x, text_y])
-                w += 1
-            h += 1
+        # Draw numbers
+        draw(grid, RED, font, screen, WIDTH, HEIGHT)
 
         pygame.draw.rect(screen, GREEN, button)
         solve = font.render("SOLVE", True, BLACK)
