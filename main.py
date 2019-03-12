@@ -1,5 +1,40 @@
 import pygame
 
+def isValid(grid, i, j, check):
+    for x in range(9):
+        if str(check) == grid[i][x]:
+            return False
+    for x in range(9):
+        if str(check) == grid[x][j]:
+            return False
+    boxX = 3 *(i//3)
+    boxY = 3 *(j//3)
+    for x in range(boxX, boxX+3):
+        for y in range(boxY, boxY+3):
+            if grid[x][y] == str(check):
+                return False
+    return True
+
+def solveSudoku(grid, i=0, j=0):
+    changes = True
+    for x in range(0,9):
+        for y in range(0,9):
+            if grid[x][y] == "":
+                i = x
+                j = y
+                changes = False
+                break
+    if changes:
+        return True
+
+    for check in range(1,10):
+        if isValid(grid,i,j,check):
+            grid[i][j] = str(check)
+            if solveSudoku(grid):
+                return True
+            grid[i][j] = ""
+    return False
+
 def draw(grid, color, font, screen, WIDTH, HEIGHT):
     h = 1
     for row in range(9):
@@ -83,7 +118,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if button.collidepoint(pos):
-                    print("solve")
+                    solveSudoku(grid, 0, 0)
                 else:
                     # Change number based on mouse click
                     column = pos[0] // (WIDTH + MARGIN)
