@@ -1,12 +1,16 @@
 import pygame
 
+# Is it valid for the rows and box
 def isValid(grid, i, j, check):
+    # Check if the number is in any of the other cells, vertical row
     for x in range(9):
         if str(check) == grid[i][x]:
             return False
+    # Check if the number is in any of the other cells, horizontal row
     for x in range(9):
         if str(check) == grid[x][j]:
             return False
+    # Check if the number is in any of the other cells, box
     boxX = 3 *(i//3)
     boxY = 3 *(j//3)
     for x in range(boxX, boxX+3):
@@ -15,7 +19,9 @@ def isValid(grid, i, j, check):
                 return False
     return True
 
+# Solve sudoku
 def solveSudoku(grid, i=0, j=0):
+    #Find next empty cell
     changes = True
     for x in range(0,9):
         for y in range(0,9):
@@ -27,6 +33,7 @@ def solveSudoku(grid, i=0, j=0):
     if changes:
         return True
 
+    # check rest of the gird if number will fit
     for check in range(1,10):
         if isValid(grid,i,j,check):
             grid[i][j] = str(check)
@@ -35,12 +42,12 @@ def solveSudoku(grid, i=0, j=0):
             grid[i][j] = ""
     return False
 
+# Fill grid with numbers
 def draw(grid, color, font, screen, WIDTH, HEIGHT):
     h = 1
     for row in range(9):
         w = 1
         for column in range(9):
-
             text = font.render(grid[row][column], True, color)
             text_rect = text.get_rect()
             text_x = ((w * (WIDTH + 4)) - WIDTH/2 ) - text_rect.width / 2
@@ -49,30 +56,28 @@ def draw(grid, color, font, screen, WIDTH, HEIGHT):
             w += 1
         h += 1
 
+# Draw vertical lines in grid
 def vertical(screen, color):
-    pygame.draw.lines(screen, color, False, [(0,0), (400,0)], 4)
-    pygame.draw.lines(screen, color, False, [(0,44), (400,44)], 1) #First small line
-    pygame.draw.lines(screen, color, False, [(0,88), (400,88)], 1) #Second small line
-    pygame.draw.lines(screen, color, False, [(0,132), (400,132)], 4) #First thick line
-    pygame.draw.lines(screen, color, False, [(0,176), (400,176)], 1) #third small line
-    pygame.draw.lines(screen, color, False, [(0,220), (400,220)], 1) #fourth small line
-    pygame.draw.lines(screen, color, False, [(0,264), (400,264)], 4) #Second thick line
-    pygame.draw.lines(screen, color, False, [(0,308), (400,308)], 1) #fifth small line
-    pygame.draw.lines(screen, color, False, [(0,352), (400,352)], 1) #sixth small line
-    pygame.draw.lines(screen, color, False, [(0,396), (400,396)], 4)
+    thickLine = 2
+    for x in range(10):
+        if thickLine == 2:
+            pygame.draw.lines(screen, color, False, [(0,x*44), (400,x*44)], 4)
+            thickLine = 0
+        else:
+            pygame.draw.lines(screen, color, False, [(0,x*44), (400,x*44)], 1)
+            thickLine += 1
 
+# Draw horizontal lines in grid
 def horizontal(screen, color):
-    pygame.draw.lines(screen, color, False, [(0,0), (0,400)], 4)
-    pygame.draw.lines(screen, color, False, [(44,0), (44,400)], 1) #First small line
-    pygame.draw.lines(screen, color, False, [(88,0), (88,400)], 1) #Second small line
-    pygame.draw.lines(screen, color, False, [(132,0), (132,400)], 4) #First thick line
-    pygame.draw.lines(screen, color, False, [(176,0), (176,400)], 1) #third small line
-    pygame.draw.lines(screen, color, False, [(220,0), (220,400)], 1) #fourth small line
-    pygame.draw.lines(screen, color, False, [(264,0), (264,400)], 4) #Second thick line
-    pygame.draw.lines(screen, color, False, [(308,0), (308,400)], 1) #fifth small line
-    pygame.draw.lines(screen, color, False, [(352,0), (352,400)], 1) #sixth small line
-    pygame.draw.lines(screen, color, False, [(396,0), (396,400)], 4)
- 
+    thickLine = 2
+    for x in range(10):
+        if thickLine == 2:
+            pygame.draw.lines(screen, color, False, [(x*44,0), (x*44,400)], 4)
+            thickLine = 0
+        else:
+            pygame.draw.lines(screen, color, False, [(x*44,0), (x*44,400)], 1)
+            thickLine += 1
+
 def main():
 
     # Define colors
@@ -108,6 +113,7 @@ def main():
     # Font
     font = pygame.font.Font(None, 36)
 
+    # Solve button
     button = pygame.Rect(0, 398, 398, 100)
 
     # Event loop
@@ -141,6 +147,7 @@ def main():
         # Draw numbers
         draw(grid, BLACK, font, screen, WIDTH, HEIGHT)
 
+        # Solve button
         pygame.draw.rect(screen, GREEN, button)
         solve = font.render("SOLVE", True, BLACK)
         solve_rect = solve.get_rect()
