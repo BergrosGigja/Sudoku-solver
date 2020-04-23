@@ -42,6 +42,12 @@ def solveSudoku(grid, i=0, j=0):
             grid[i][j] = ""
     return False
 
+def clear(grid):
+    for x in range(0,9):
+        for y in range(0,9):
+            grid[x][y] = ""
+    return False;
+
 # Fill grid with numbers
 def draw(grid, color, font, screen, WIDTH, HEIGHT):
     h = 1
@@ -116,6 +122,8 @@ def main():
     # Solve button
     button = pygame.Rect(0, 398, 398, 100)
 
+    solved = False
+
     # Event loop
     while 1:
         for event in pygame.event.get():
@@ -124,7 +132,10 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if button.collidepoint(pos):
-                    solveSudoku(grid, 0, 0)
+                    if solved:
+                        solved = clear(grid)
+                    else:
+                        solved = solveSudoku(grid, 0, 0)
                 else:
                     # Change number based on mouse click
                     column = pos[0] // (WIDTH + MARGIN)
@@ -148,8 +159,13 @@ def main():
         draw(grid, BLACK, font, screen, WIDTH, HEIGHT)
 
         # Solve button
-        pygame.draw.rect(screen, GREEN, button)
-        solve = font.render("SOLVE", True, BLACK)
+        if solved:
+            pygame.draw.rect(screen, RED, button)
+            solve = font.render("PLAY AGAIN", True, BLACK)
+        else:
+            pygame.draw.rect(screen, GREEN, button)
+            solve = font.render("SOLVE", True, BLACK)
+
         solve_rect = solve.get_rect()
         text_x = 200 - solve_rect.width / 2
         text_y = 450 - solve_rect.height / 2
